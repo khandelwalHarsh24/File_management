@@ -116,4 +116,20 @@ Request body: { "email": "your_email@example.com", "password": "your_password" }
 1. For Data Storage Uses Local Storage which is done by multer
 
 
+### Database Design Decision
+
+1. We have to design a database for file management system having login functionality and register functionality.
+
+2. For User , I design a User Table where user detail should be there.
+
+3. Then for folder , as folder should be created by user so if user get deleted , then automatically folder should delete.
+
+4. So to maintain consistency in database, I implement a folderdata table having userid as a foreign key.
+
+5. To maintain subfolder data also , parent_folder_id in folderdata table to have a tree of child and parent which is also 
+   Foreign key.
+
+6. For maintaining File Meta Data, creating a filemetaData and also userId and folderId as Foreign Key.
+
+
 
