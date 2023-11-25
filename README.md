@@ -13,7 +13,7 @@ This is a File Manager application that allows users to securely manage folders 
 
 2. Install dependency
 
-   cd file-manager-app
+   cd File_management
    npm install
 
 ### Database Schema
