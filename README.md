@@ -1,6 +1,6 @@
 # File Manager Application
 
-This is a File Manager application that allows users to securely manage folders and files. The application is built using Node.js, Express, PostgreSQL for data storage, and AWS S3 for file storage.
+This is a File Manager application that allows users to securely manage folders and files. The application is built using Node.js, Express, PostgreSQL for data storage, and local storage for file storage.
 
 ## Setup
 
@@ -9,7 +9,7 @@ This is a File Manager application that allows users to securely manage folders 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/file-manager-app.git
+   git clone https://github.com/your-username/File_management.git
 
 2. Install dependency
 
