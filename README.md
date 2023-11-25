@@ -51,14 +51,11 @@ folderId (INT, Foreign Key): References the folder_id in the Folderdata table. I
 ### Register a new user.
 
 POST /api/v1/user/register
-Request body: { "username": "your_username", "email": "your_email@example.com", "password": "your_password" }
-
 
 
 ### Log in an existing user.
 
 POST /api/v1/user/login
-Request body: { "email": "your_email@example.com", "password": "your_password" }
 
 
 ### Create Folder API
@@ -66,12 +63,10 @@ Request body: { "email": "your_email@example.com", "password": "your_password" }
 1. Create a new folder.
 
    POST /api/v1/folder/:userId
-   Request body: { "folderName": "Folder Name" }
 
 2. Create Subfolder API
 
    POST /api/v1/folder/:parentId/subfolder
-   Request body: { "subfolderName": "Subfolder Name", "parentFolderId": 1 }
 
 3. Upload Files API
 
@@ -81,7 +76,6 @@ Request body: { "email": "your_email@example.com", "password": "your_password" }
 4. Rename a file.
    
    PUT /api/v1/folder/file/rename
-   Request body: { "newFilename": "New File Name" }
 
 5. Move a file to a different folder.
 
