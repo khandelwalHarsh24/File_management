@@ -7,14 +7,7 @@ async function checkSubfolderPermission(userId, parentFolderId) {
     return permissionCheck.rows.length > 0;
 }
 
-async function folderExist(userId,folderName){
-    const folderExists = await pool.query(queries.folderById, [folderName, userId]);
-    const userExists=await pool.query(queries.getUserById,[userId]);
-    if (userExists.rows.length===0 || folderExists.rows.length > 0) {
-        return true;
-    }
-    return false;
-}
+
 
 
 const getFolders=async (req,res)=>{
@@ -33,11 +26,16 @@ const getFolders=async (req,res)=>{
 const postFolder=async (req, res) => {
     try {
       const userId=parseInt(req.params.userId);
+      console.log(userId);
       const {folderName} = req.body;
+      console.log(folderName);
       if (!folderName) {
         return res.status(400).json({ error: 'Folder name are required.' });
       }
-      if (folderExist(userId,folderName)) {
+      
+      const folderExists = await pool.query(queries.folderById, [folderName, userId]);
+      const userExists=await pool.query(queries.getUserById,[userId]);
+      if (folderExists.rows.length>0 || userExists.rows.length===0) {
         return res.status(400).json({ error: 'Folder name must be unique or User Does not Exist' });
       }
       await pool.query(queries.postFolders, [folderName, userId]);

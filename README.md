@@ -62,10 +62,14 @@ This is a File Manager application that allows users to securely manage folders 
 
 POST /api/v1/user/register
 
+Request body: { "username": "your_username", "email": "your_email@example.com", "password": "your_password" }
+
 
 ### Log in an existing user.
 
 POST /api/v1/user/login
+
+Request body: { "email": "your_email@example.com", "password": "your_password" }
 
 
 ### Create Folder API
@@ -74,25 +78,42 @@ POST /api/v1/user/login
 
    POST /api/v1/folder/:userId
 
+   Request body: { "folderName": "Folder Name" }
+
 2. Create Subfolder API
 
    POST /api/v1/folder/:parentId/subfolder
 
+   Request body: { "subfolderName": "Subfolder Name"}
+
 3. Upload Files API
 
    POST /api/v1/folder/uploads
-   Request body: FormData with file field.
+
+   Request body: {"userId": "User Id","folderId": "Folder Id","file":"Upload File"}
    
 4. Rename a file.
    
    PUT /api/v1/folder/file/rename
 
+   Request body: {"userId": "User Id","fileId": "File Id","newfileName":"Rename File"}
+
 5. Move a file to a different folder.
 
    PUT /api/v1/folder/file/move
 
+   Request body: { fileId: "file ID",userId: "user Id", newFolderId": "New Folder Id" }
+
 6. Delete a file.
 
    DELETE /api/v1/folder/file/delete
+
+   Request body: { fileId: "file ID",userId: "user Id"}
+
+
+### Data Storage
+
+1. For Data Storage Uses Local Storage which is done by multer
+
 
 

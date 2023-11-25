@@ -19,8 +19,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-router.route('/uploads').post(upload.single('file'),fileSubmit);
 router.route('/:userId').post(postFolder);
+router.route('/uploads').post(upload.single('file'),fileSubmit);
 router.route('/file/rename').post(fileRename);
 router.route('/file/move').post(moveFile);
 router.route('/file/delete').delete(deleteFile);

@@ -1,7 +1,6 @@
 const express=require('express');
 const router=express.Router();
 
-
 const {getUsers,getUserById,registerUser,loginUser} =require('../controller/userController');
 
 router.route('/getUser').get(getUsers);
