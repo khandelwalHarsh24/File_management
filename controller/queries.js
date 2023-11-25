@@ -16,7 +16,7 @@ const postSubfolder="INSERT INTO folderdata (folder_name, user_id, parent_folder
 const getFolderCheck="SELECT * FROM folderdata WHERE folder_id = $1 AND user_id = $2"
 
 // metadata
-const metaData="INSERT INTO filemetadata (file_name, file_size, upload_date, user_id, folder_id, s3_object_key) VALUES ($1, $2, $3, $4, $5, $6)";
+const metaData="INSERT INTO filemetadata (file_name, file_size, upload_date, user_id, folder_id) VALUES ($1, $2, $3, $4, $5)";
 const updateFile="UPDATE filemetadata SET file_name = $1 WHERE file_id = $2";
 const filecheck="SELECT * FROM filemetadata WHERE file_id = $1 AND user_id = $2";
 const updateFolder="UPDATE filemetadata SET folder_id = $1 WHERE file_id = $2";

@@ -1,12 +1,6 @@
 const queries=require('./queries');
 const pool=require('../DB/connectDB');
-// const AWS = require('aws-sdk');
 
-
-// const s3 = new AWS.S3({
-//   accessKeyId: 'your_aws_access_key_id',
-//   secretAccessKey: 'your_aws_secret_access_key',
-// });
 
 async function checkSubfolderPermission(userId, parentFolderId) {
     const permissionCheck = await pool.query(queries.getFolderCheck, [parentFolderId, userId]);
@@ -16,7 +10,7 @@ async function checkSubfolderPermission(userId, parentFolderId) {
 async function folderExist(userId,folderName){
     const folderExists = await pool.query(queries.folderById, [folderName, userId]);
     const userExists=await pool.query(queries.getUserById,[userId]);
-    if (userExists.rows.length<=0 || folderExists.rows.length > 0) {
+    if (userExists.rows.length===0 || folderExists.rows.length > 0) {
         return true;
     }
     return false;
@@ -44,7 +38,7 @@ const postFolder=async (req, res) => {
         return res.status(400).json({ error: 'Folder name are required.' });
       }
       if (folderExist(userId,folderName)) {
-        return res.status(400).json({ error: 'Folder name must be unique for the this folder or User Does not Exist' });
+        return res.status(400).json({ error: 'Folder name must be unique or User Does not Exist' });
       }
       await pool.query(queries.postFolders, [folderName, userId]);
       res.status(201).json({ message: 'Folder created successfully.' });
@@ -59,7 +53,7 @@ const postFolder=async (req, res) => {
         const parentFolderId=req.params.parentId;
         const { subfolderName } = req.body;
         const userId=req.userId;
-        console.log(userId);
+        // console.log(userId);
         if (!subfolderName) {
           return res.status(400).json({ error: 'Subfolder name are required.' });
         }
@@ -82,8 +76,9 @@ const postFolder=async (req, res) => {
 
   const fileSubmit=async(req,res)=>{
     try {
-      const userId=req.userId;
-      const {file,folderId} = req.file;
+      const userId=req.body.userId;
+      const file = req.file;
+      const folderId=req.body.folderId;
       if (!folderId || !userId || !file) {
         return res.status(400).json({ error: 'Folder ID, user ID, and file are required.' });
       }
@@ -93,22 +88,13 @@ const postFolder=async (req, res) => {
         return res.status(403).json({ error: 'Permission denied. User does not have the required permission for the folder.' });
       }
   
-      // Upload the file to AWS S3
-      const params = {
-        Bucket: 'your_s3_bucket_name',
-        Key: file.originalname,
-        Body: file.buffer,
-      };
-  
-      const s3UploadResponse = await s3.upload(params).promise();
-  
       // Record file metadata in the database
       const fileName = file.originalname;
       const fileSize = file.size;
       const uploadDate = new Date();
       
       await pool.query(queries.metaData,
-        [fileName, fileSize, uploadDate, userId, folderId, s3UploadResponse.Key]);
+        [fileName, fileSize, uploadDate, userId, folderId]);
   
       res.status(201).json({ message: 'File uploaded successfully.' });
     } catch (error) {
@@ -121,8 +107,8 @@ const postFolder=async (req, res) => {
 
   const fileRename=async(req,res)=>{
     try {
-      const userId=req.userId;
-      const { fileId, newFileName } = req.body;
+
+      const { fileId, newFileName,userId } = req.body;
       if (!fileId || !newFileName || !userId) {
         return res.status(400).json({ error: 'File ID, new file name, and user ID are required.' });
       }
@@ -141,16 +127,16 @@ const postFolder=async (req, res) => {
 
   const moveFile=async(req,res)=>{
     try {
-      const userId=req.userId;
-      const { fileId, newFolderId } = req.body;
+      const { fileId, newFolderId,userId } = req.body;
   
       if (!fileId || !newFolderId || !userId) {
         return res.status(400).json({ error: 'File ID, new folder ID, and user ID are required.' });
       }
   
       const fileExist = await pool.query(queries.filecheck, [fileId, userId]);
-      if (fileExist.rows.length === 0) {
-        return res.status(403).json({ error: 'File does not exist' });
+      const folderCheck=await pool.query(queries.getFolderCheck,[newFolderId,userId]);
+      if (fileExist.rows.length === 0 || folderCheck.rows.length===0) {
+        return res.status(403).json({ error: 'File does not exist or folder deesnot Exist' });
       }
   
       await pool.query(queries.updateFolder, [newFolderId, fileId]);
@@ -164,9 +150,7 @@ const postFolder=async (req, res) => {
 
   const deleteFile=async(req,res)=>{
     try {
-      const userId=req.userId;
-      const { fileId } = req.body;
-  
+      const { fileId,userId } = req.body;
       if (!fileId || !userId) {
         return res.status(400).json({ error: 'File ID and user ID are required.' });
       }
@@ -174,8 +158,6 @@ const postFolder=async (req, res) => {
       if (fileExist.rows.length === 0) {
         return res.status(403).json({ error: 'Permission denied. User does not have the required permission for the file.' });
       }
-      const fileKey = fileExist.rows[0].s3_object_key;
-      await s3.deleteObject({ Bucket: 'your_s3_bucket_name', Key: fileKey }).promise();
       await pool.query(queries.deleteFile, [fileId]);
       res.status(200).json({ message: 'File deleted successfully.' });
     } catch (error) {
@@ -183,9 +165,6 @@ const postFolder=async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
-
-
-
 
 
   module.exports={getFolders,postFolder,postSubfolder,fileSubmit,fileRename,moveFile,deleteFile};

@@ -21,27 +21,37 @@ This is a File Manager application that allows users to securely manage folders 
 
 ### Userdata Table
 
-user_id (Primary Key, Serial): Unique identifier for each user.
-username (VARCHAR, NOT NULL): User's username.
-email (VARCHAR, NOT NULL): User's email address.
-password (VARCHAR, NOT NULL): User's hashed password.
+1. user_id (Primary Key, Serial): Unique identifier for each user.
+
+2. username (VARCHAR, NOT NULL): User's username.
+
+3. email (VARCHAR, NOT NULL): User's email address.
+
+4. password (VARCHAR, NOT NULL): User's hashed password.
 
 ### FolderData Table
 
-Folderdata Table
-folder_id (Primary Key, Serial): Unique identifier for each folder.
-folder_name (VARCHAR, NOT NULL): Name of the folder.
-user_id (INT, NOT NULL, Foreign Key): References the user_id in the Userdata table.
-parent_folder_id (INT, Foreign Key): References the folder_id in the Folderdata table. Indicates the parent folder.
-created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Timestamp indicating when the folder was created.
+1. folder_id (Primary Key, Serial): Unique identifier for each folder.
+
+2. folder_name (VARCHAR, NOT NULL): Name of the folder.
+
+3. user_id (INT, NOT NULL, Foreign Key): References the user_id in the Userdata table.
+
+4. parent_folder_id (INT, Foreign Key): References the folder_id in the Folderdata table. Indicates the parent folder.
+
+5. created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Timestamp indicating when the folder was created.
 
 ### Filemetadata Table
 
-file_id (Primary Key, Serial): Unique identifier for each file.
-filename (VARCHAR, NOT NULL): Name of the file.
-user_id (INT, NOT NULL, Foreign Key): References the user_id in the Userdata table.
-upload_date (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Timestamp indicating when the file was uploaded.
-folderId (INT, Foreign Key): References the folder_id in the Folderdata table. Indicates the file folder.
+1. file_id (Primary Key, Serial): Unique identifier for each file.
+
+2. filename (VARCHAR, NOT NULL): Name of the file.
+
+3. user_id (INT, NOT NULL, Foreign Key): References the user_id in the Userdata table.
+
+4. upload_date (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP): Timestamp indicating when the file was uploaded.
+
+5. folderId (INT, Foreign Key): References the folder_id in the Folderdata table. Indicates the file folder.
 
 
 ### API Endpoints
